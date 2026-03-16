@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Adalo Map</title>
+  <style>
+    html, body { height: 100%; margin: 0; padding: 0; }
+    #map { height: 100%; width: 100%; }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+
+  <script>
+    // Read URL parameters (for future dynamic filtering)
+    const urlParams = new URLSearchParams(window.location.search);
+    const selectedCategory = urlParams.get('category') || "All";
+
+    // Example static locations (later we can make this dynamic)
+    const locations = [
+      {lat: -29.430, lng: 153.360, name: "Joe's Auto", category: "Mechanic"},
+      {lat: -29.431, lng: 153.361, name: "Bakery A", category: "Bakery"},
+      {lat: -29.432, lng: 153.362, name: "Cafe B", category: "Restaurant"}
+    ];
+
+    // Marker colors for each category
+    const categoryColors = {
+      "Mechanic": "blue",
+      "Restaurant": "red",
+      "Bakery": "yellow"
+    };
+
+    function initMap() {
+      const map = new google.maps.Map(document.getElementById("map"), {
+        zoom: 12,
+        center: { lat: -29.430, lng: 153.360 } // change to your city center
+      });
+
+      locations.forEach(loc => {
+        if (selectedCategory !== "All" && loc.category !== selectedCategory) return;
+
+        new google.maps.Marker({
+          position: { lat: loc.lat, lng: loc.lng },
+          map: map,
+          title: loc.name,
+          icon: {
+            path: google.maps.SymbolPath.CIRCLE,
+            scale: 8,
+            fillColor: categoryColors[loc.category] || "gray",
+            fillOpacity: 1,
+            strokeWeight: 1
+          }
+        });
+      });
+    }
+  </script>
+
+  <script async
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAU74R8jfaFJa8stKajUrYphNOTWTWPmrg&callback=initMap">
+  </script>
+</body>
+</html>
